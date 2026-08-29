@@ -196,35 +196,31 @@ lien vers un compte facultatifs). Les bénévoles se gèrent ensuite depuis l'é
 
 ### a. Pousser sur GitHub
 
+Crée d'abord un dépôt **vide** sur github.com, puis :
+
 ```bash
 cd "Gestion Planning cop1"
-git init
-git add .
-git commit -m "Version initiale"
-git branch -M main
 git remote add origin https://github.com/<toi>/<depot>.git
 git push -u origin main
 ```
 
-Le `.env` n'est **pas** poussé (il est dans `.gitignore`).
+(Le dépôt est déjà initialisé, branche `main`, premier commit fait. Le `.env` n'est **pas**
+poussé — il est dans `.gitignore`.)
 
-### b. Frontend sur Render (site statique)
+### b. Frontend sur Vercel
 
-Le fichier [`render.yaml`](render.yaml) décrit déjà tout.
-
-1. Render → **New** → **Blueprint** → connecte le dépôt GitHub. Render détecte `render.yaml`.
-2. Il demande les deux variables : renseigne **`VITE_SUPABASE_URL`** et
-   **`VITE_SUPABASE_ANON_KEY`** (Supabase → Project Settings → API). Vite les intègre **au
-   moment du build**, donc elles doivent être présentes avant le premier déploiement.
-3. **Apply** → Render fait `npm ci && npm run build` et publie `dist/`.
-4. Dans Supabase → **Authentication → URL Configuration** : mets l'URL Render dans **Site URL**
+1. Vercel → **Add New → Project** → importe le dépôt GitHub. Framework détecté : **Vite**
+   (build `npm run build`, sortie `dist` — laisse les valeurs par défaut).
+2. **Environment Variables** : ajoute **`VITE_SUPABASE_URL`** et **`VITE_SUPABASE_ANON_KEY`**
+   (Supabase → Project Settings → API) pour l'environnement *Production*. Vite les intègre **au
+   moment du build**.
+3. **Deploy**.
+4. Dans Supabase → **Authentication → URL Configuration** : mets l'URL Vercel dans **Site URL**
    et ajoute-la aux **Redirect URLs** (pour les liens « mot de passe oublié »).
 
-> Le fichier `render.yaml` inclut la règle de réécriture SPA (`/* → /index.html`) : les routes
-> `/planning/...`, `/p/...`, `/semaine` fonctionnent en accès direct.
->
-> Alternative Vercel : importer le dépôt (framework Vite détecté), mêmes deux variables ; le
-> fichier [`vercel.json`](vercel.json) fournit la même réécriture SPA.
+> Le fichier [`vercel.json`](vercel.json) contient la réécriture SPA (`/(.*) → /index.html`) :
+> indispensable pour que `/planning/...`, `/p/<code>` et `/semaine` fonctionnent en accès
+> direct (un bénévole qui ouvre le lien public, un partage, un rafraîchissement de page).
 
 ### c. Edge Functions (gestion des comptes)
 
