@@ -1,0 +1,325 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{xcolor}
+\usepackage{tgadventor} % titres — pendant de Raleway
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{tgheros}    % corps de texte — pendant de Hanken Grotesk
+\usepackage{tgcursor}   % monospace
+\usepackage{tcolorbox}
+\tcbuselibrary{raster,skins,breakable}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{parskip}
+\usepackage{hyperref}
+
+% ---------- Palette (identique à l'appli) ----------
+\definecolor{accent}{HTML}{DF5F4D}
+\definecolor{accentdark}{HTML}{C94E3D}
+\definecolor{accentsoft}{HTML}{FBEAE7}
+\definecolor{good}{HTML}{3F7D4F}
+\definecolor{goodsoft}{HTML}{E9F2EB}
+\definecolor{warn}{HTML}{B3392A}
+\definecolor{warnsoft}{HTML}{F7E9E7}
+\definecolor{ink}{HTML}{221D17}
+\definecolor{muted}{HTML}{8A7F6F}
+\definecolor{border}{HTML}{ECDFC4}
+\definecolor{cardbg}{HTML}{FBF0DB}
+
+\color{ink}
+\hypersetup{colorlinks=true, urlcolor=accentdark, linkcolor=accentdark}
+
+% ---------- Titres de section ----------
+\titleformat{\section}
+  {\sffamily\fontfamily{qag}\selectfont\bfseries\Large\color{accent}}
+  {}{0pt}{}
+  [{\color{border}\titlerule[1.1pt]}]
+\titlespacing*{\section}{0pt}{22pt}{10pt}
+
+\titleformat{\subsection}
+  {\sffamily\fontfamily{qag}\selectfont\bfseries\large\color{ink}}
+  {}{0pt}{}
+\titlespacing*{\subsection}{0pt}{14pt}{4pt}
+
+% ---------- Petits utilitaires ----------
+\newcommand{\eyebrow}[1]{{\sffamily\fontfamily{qag}\selectfont\bfseries\small\color{accentdark}\MakeUppercase{#1}}\par\vspace{2pt}}
+
+\newtcbox{\flaggood}{on line, boxrule=0pt, colback=goodsoft, colframe=goodsoft,
+  colupper=good, arc=8pt, boxsep=1pt, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  fontupper=\sffamily\fontfamily{qag}\selectfont\bfseries\small}
+\newtcbox{\flagwarn}{on line, boxrule=0pt, colback=warnsoft, colframe=warnsoft,
+  colupper=warn, arc=8pt, boxsep=1pt, left=8pt, right=8pt, top=4pt, bottom=4pt,
+  fontupper=\sffamily\fontfamily{qag}\selectfont\bfseries\small}
+
+\newtcolorbox{notebox}{
+  colback=accentsoft, colframe=accent, boxrule=0.8pt, arc=6pt,
+  left=12pt, right=12pt, top=8pt, bottom=8pt
+}
+
+\newtcolorbox{technicalbox}{
+  colback=white, colframe=muted, boxrule=1.1pt, arc=6pt,
+  frame style={dash pattern=on 5pt off 4pt},
+  left=14pt, right=14pt, top=10pt, bottom=10pt
+}
+
+\newtcolorbox{sqlbox}{
+  colback=ink, colframe=ink, arc=4pt,
+  left=12pt, right=12pt, top=6pt, bottom=6pt,
+  fontupper=\ttfamily\small\color{cardbg}
+}
+
+\newtcolorbox{rolecard}[1][]{
+  colback=white, colframe=border, boxrule=0.8pt, arc=8pt,
+  left=12pt, right=12pt, top=10pt, bottom=10pt,
+  valign=top, #1
+}
+
+\setlist[itemize]{label={\color{accent}\textbullet}, leftmargin=1.4em, itemsep=2pt, topsep=2pt}
+\setlist[enumerate]{leftmargin=1.6em, itemsep=4pt, topsep=2pt}
+
+\pagestyle{empty}
+
+\begin{document}
+
+% ---------- En-tête ----------
+\begin{center}
+\begin{minipage}{\textwidth}
+{\sffamily\fontfamily{qag}\selectfont\bfseries\huge\color{accent}Fonctionnement de l'appli Planning}\\[3pt]
+{\sffamily\itshape\small\color{muted}Gestion des plannings hebdomadaires — CO-P1}
+\end{minipage}
+\end{center}
+\vspace{2pt}
+{\color{border}\hrule height 1.4pt}
+\vspace{8pt}
+
+\noindent L'appli remplace le fichier Excel des plannings hebdo. Une \textbf{semaine} = une
+grille du lundi au dimanche. Chaque jour contient un ou plusieurs \textbf{créneaux} (trajets /
+tournées). Les \textbf{référents} et les \textbf{bénévoles} sont affectés à chaque créneau ; les
+bénévoles s'inscrivent eux-mêmes via un \textbf{lien public}, sans compte.
+
+% ---------- Rôles ----------
+\section{2 rôles}
+
+\begin{tcbraster}[raster columns=2, raster equal height=rows, raster column skip=8pt]
+\begin{rolecard}
+{\ttfamily\footnotesize\color{muted}Gestion des plannings}\\[6pt]
+{\sffamily\fontfamily{qag}\selectfont\bfseries Gestionnaire}\\[6pt]
+{\small Crée, édite et archive les semaines. Ajoute / modifie / supprime les créneaux. Gère les
+référents et les bénévoles. Partage le lien public, verrouille les inscriptions.}\\[6pt]
+{\small Ne gère pas les comptes. Ne supprime pas définitivement une semaine (l'archivage suffit).}
+\end{rolecard}
+\begin{rolecard}[colframe=accent, boxrule=1.4pt]
+{\ttfamily\footnotesize\color{muted}Administration}\\[6pt]
+{\sffamily\fontfamily{qag}\selectfont\bfseries Admin}\\[6pt]
+{\small Tout ce que fait un gestionnaire, plus : dans l'onglet \textbf{Utilisateurs}, création de
+comptes, modification NOM / prénom / email / téléphone / rôle, définition d'un mot de passe,
+suppression d'un compte.}\\[6pt]
+{\small Peut aussi supprimer \textbf{définitivement} une semaine.}
+\end{rolecard}
+\end{tcbraster}
+
+\begin{notebox}
+Les \textbf{seuls comptes} sont ceux des personnes qui gèrent le planning (une petite équipe).
+Les bénévoles n'ont pas de compte : ils passent par le lien public.
+
+\vspace{4pt}
+Après avoir créé le tout premier compte (page \texttt{/inscription}) et l'avoir passé en
+\texttt{admin}, on \textbf{désactive l'inscription} dans Supabase : plus personne ne peut créer
+de compte de l'extérieur. Ensuite, les comptes se créent uniquement depuis l'onglet
+\textbf{Utilisateurs}. (Détails dans le \texttt{README}.)
+\end{notebox}
+
+\newpage
+% ---------- Semaines ----------
+\section{Semaines}
+\eyebrow{Onglet Semaines}
+
+La page d'accueil liste les semaines \textbf{actives} (en cours et à venir).
+
+\begin{itemize}
+  \item \textbf{+ Semaine courante} / \textbf{+ Semaine suivante} : crée la semaine
+  correspondante. Les dates sont calées sur l'heure de \textbf{Paris} — le lundi de la semaine
+  en cours est calculé automatiquement, pas besoin de le saisir.
+  \item \textbf{Dupliquer} : crée une nouvelle semaine en recopiant tous les créneaux et les
+  \textbf{référents} d'une semaine existante (les bénévoles ne sont pas recopiés). Pratique
+  quand les trajets se répètent d'une semaine à l'autre.
+  \item \textbf{Surnom} : le bouton « surnom » à côté du titre ajoute un surnom facultatif
+  (« Semaine de la rentrée »…). Il s'affiche \textbf{en plus} des dates, partout, sans les
+  remplacer.
+  \item Le lien \textbf{« Voir les semaines archivées »} mène aux semaines passées.
+\end{itemize}
+
+\flaggood{Créer une semaine est réversible} \; (archivage, ou suppression définitive réservée
+aux admins)
+
+% ---------- Une semaine ----------
+\section{Éditer une semaine}
+\eyebrow{Semainier : heures verticales, jours en colonnes}
+
+La semaine s'affiche en \textbf{grille horaire} : colonnes = jours, lignes = heures. Chaque
+créneau est un \textbf{bloc coloré} placé selon ses horaires ; deux créneaux du même jour qui
+se chevauchent se mettent \textbf{côte à côte} ; un créneau dont l'horaire n'est pas
+interprétable va dans la bande \textbf{« heure ? »} en haut de la colonne. Le bouton
+\textbf{+ Créneau} est en \textbf{haut} de chaque colonne. Le bloc affiche intitulé, horaires,
+référents, bénévoles et notes (tout le détail dans l'infobulle au survol) ; \textbf{cliquer un
+bloc ouvre son éditeur}. Le bouton \textbf{« Colonnes - / + »} élargit ou resserre les
+colonnes. Une \textbf{semaine archivée} passe en lecture seule (ni + Créneau, ni édition des
+blocs) : cliquez \textbf{« Réactiver »} pour la modifier de nouveau.
+
+\subsection*{Un créneau contient :}
+\begin{itemize}
+  \item le \textbf{trajet / destination} (ex. \emph{Rungis}, \emph{BAPIF Saclay}) — champ à
+  autocomplétion sur les \textbf{lieux enregistrés}
+  \item les \textbf{horaires} en texte libre (\texttt{8h-11h}, \texttt{11h30-14h}, \texttt{17h}…)
+  \item le \textbf{lieu de départ} (ex. \emph{Censier}, \emph{BAPIF Arcueil}) — même
+  autocomplétion
+  \item le \textbf{véhicule} : \texttt{Ducato (Manuel)}, \texttt{Jumpy (auto)},
+  \texttt{Europcar (auto)} ou \texttt{Sans véhicule}
+  \item \textbf{au moins un référent} (obligatoire) — nom ; téléphone et lien vers un compte
+  facultatifs
+  \item le \textbf{nombre de places bénévoles} (2 par défaut)
+  \item des \textbf{notes} (optionnel)
+\end{itemize}
+
+Les \textbf{bénévoles} se gèrent depuis l'éditeur du créneau (bouton \textbf{« Gérer les
+bénévoles »}), ou par le lien public. L'éditeur porte aussi \textbf{« Supprimer le créneau »}.
+Quand un nom (trajet ou départ) correspond exactement à un lieu enregistré, son
+\textbf{adresse} s'affiche sous le champ.
+
+\begin{notebox}
+\textbf{Ducato} apparaît avec une pastille « boîte manuelle » : pensez au permis manuelle pour
+la personne qui conduit. \textbf{Europcar} est signalé en vert.
+\end{notebox}
+
+% ---------- Lieux et couleurs ----------
+\section{Lieux et couleurs}
+\eyebrow{Onglet Lieux}
+
+Une liste partagée de lieux, chacun avec une \textbf{adresse} et une \textbf{couleur}.
+
+\begin{itemize}
+  \item L'\textbf{adresse} est proposée à la saisie d'un créneau (autocomplétion + rappel sous
+  le champ).
+  \item La \textbf{couleur} devient le fond du bloc du créneau, à l'écran \textbf{comme au PDF} :
+  celle du lieu de \textbf{destination} s'il est enregistré, sinon celle du \textbf{départ},
+  sinon gris. La correspondance est \textbf{exacte} — enregistrez chaque lieu précis
+  (« BAPIF Arcueil », « BAPIF Saclay »…). Quelques lieux d'exemple sont pré-remplis ;
+  complétez leurs adresses.
+\end{itemize}
+
+% ---------- Conflits de véhicule ----------
+\section{Conflit de véhicule}
+\eyebrow{Alerte automatique}
+
+Si un \textbf{même véhicule} (hors « Sans véhicule ») est affecté à \textbf{deux créneaux du
+même jour dont les horaires se chevauchent}, un bandeau rouge le signale en haut de la semaine
+et les créneaux concernés sont encadrés en rouge.
+
+\vspace{4pt}
+Si des horaires ne sont pas interprétables (texte trop libre), le conflit n'est pas détecté —
+mieux vaut ne rien signaler que signaler à tort.
+
+% ---------- Lien public ----------
+\section{Lien public — inscription des bénévoles}
+\eyebrow{Bouton « Lien public »}
+
+Le bouton propose deux liens (+ QR code) :
+\begin{itemize}
+  \item \textbf{Lien permanent} \texttt{…/semaine} : montre \textbf{toujours la semaine en
+  cours} et se met à jour tout seul chaque lundi. C'est celui à partager une fois pour toutes
+  (groupe WhatsApp, affichage sur place).
+  \item \textbf{Lien de cette semaine précise} \texttt{…/p/<code>} (code court de
+  6 caractères) : pour diffuser une semaine à l'avance.
+\end{itemize}
+
+La page publique reprend la \textbf{même présentation} que la version gestion (mêmes blocs
+colorés). Sans compte, un bénévole peut :
+\begin{itemize}
+  \item consulter toute la semaine — en \textbf{vue liste} (jour par jour, choisie par défaut
+  sur téléphone) ou en \textbf{vue grille}, via la bascule en haut ;
+  \item \textbf{toucher un créneau} pour ouvrir sa fiche détaillée (jour, horaires, départ +
+  adresse, destination, véhicule, référents et bénévoles avec téléphones, places libres, notes) ;
+  \item toucher \textbf{« + M'inscrire »} (sur le créneau ou dans sa fiche) s'il reste des
+  places, saisir son \textbf{nom} et — recommandé — son \textbf{téléphone} ;
+  \item se \textbf{retirer} d'un créneau où il s'est inscrit depuis ce navigateur.
+\end{itemize}
+
+Contrôles côté serveur : créneau complet, doublon de nom, semaine verrouillée -- l'inscription
+est refusée avec un message clair.
+
+\vspace{6pt}
+\flagwarn{Verrouiller} \; Le bouton \textbf{« Verrouiller »} coupe toutes les inscriptions
+publiques ; la semaine reste consultable. Une semaine archivée est aussi en lecture seule.
+
+\newpage
+% ---------- Export PDF ----------
+\section{Export PDF}
+\eyebrow{Bouton « Exporter en PDF »}
+
+Le bouton \textbf{télécharge directement un PDF} (A4 paysage, une page) : en-tête avec le
+\textbf{logo}, « Semaine du … » (+ le surnom), un filet aux couleurs de l'appli, puis le
+semainier coloré. Le \textbf{même format} est utilisé partout — export individuel d'une semaine
+\emph{et} export groupé des archives. \textbf{Seule différence} : le \textbf{QR code} du lien
+public n'apparaît que pour les semaines \textbf{actives}, pas pour les archivées.
+
+\vspace{4pt}
+\textbf{Export groupé} : dans l'onglet Archives, cochez plusieurs semaines puis
+\textbf{« Exporter la sélection »} — un PDF par semaine, réunis dans un \texttt{.zip} (une
+seule semaine cochée $\rightarrow$ PDF direct).
+
+% ---------- Archivage ----------
+\section{Archivage}
+\eyebrow{Onglet Archives}
+
+\begin{itemize}
+  \item \textbf{Automatique} : une semaine dont le dimanche est passé bascule en
+  \textbf{archivée} (au plus tard au prochain chargement de la liste des semaines).
+  \item \textbf{Manuel} : bouton \textbf{« Archiver »} sur une semaine ; \textbf{« Réactiver »}
+  pour la remettre en actif et pouvoir la modifier.
+\end{itemize}
+
+Une semaine archivée est en \textbf{lecture seule} mais reste \textbf{consultable et
+ré-exportable en PDF} depuis l'onglet Archives (cf. \emph{Export PDF} pour l'export groupé).
+
+% ---------- Historique ----------
+\section{Historique des modifications}
+\eyebrow{En bas de chaque semaine}
+
+Chaque ajout / modification / suppression de créneau ou d'affectation est journalisé avec
+\textbf{qui} (nom du compte, ou « Lien public » pour une inscription bénévole), \textbf{quand},
+et un court résumé. La section « Historique » est dépliable en bas de la page d'une semaine.
+
+% ---------- Technique ----------
+\section{Repères techniques}
+\begin{technicalbox}
+\textbf{Base} : Supabase (PostgreSQL + Auth + Edge Functions).
+Tables : \texttt{profiles}, \texttt{plannings}, \texttt{activites}, \texttt{affectations},
+\texttt{historique}, \texttt{lieux}.
+
+\vspace{4pt}
+\textbf{Sécurité} : RLS active partout. Le public (\texttt{anon}) n'a \emph{aucun} accès direct
+aux tables : il passe uniquement par des fonctions \texttt{SECURITY DEFINER}
+(\texttt{planning\_public}, \texttt{inscrire\_benevole}, \texttt{desinscrire\_benevole}) qui
+prennent le code du lien en paramètre.
+
+\vspace{4pt}
+\textbf{Comptes} : gérés par des Edge Functions à clé \texttt{service\_role}
+(\texttt{admin-create-user}, \texttt{admin-set-password}, \texttt{admin-update-email},
+\texttt{delete-user}), chacune vérifiant que l'appelant est \texttt{admin}.
+
+\vspace{4pt}
+\textbf{Archivage auto} : fonction \texttt{archiver\_semaines\_ecoulees()}, appelée à
+l'ouverture de la liste, et — si \texttt{pg\_cron} est activé — une fois par nuit.
+\end{technicalbox}
+
+% ---------- Pied de page ----------
+\vspace{18pt}
+{\color{border}\hrule height 1.4pt}
+\vspace{10pt}
+\noindent\small Pour toute suggestion, demande ou problème, contacter\\
+{\sffamily\fontfamily{qag}\selectfont\bfseries Samuel LEGER}.
+
+\end{document}

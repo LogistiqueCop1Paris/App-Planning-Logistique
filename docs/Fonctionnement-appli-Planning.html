@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fonctionnement de l'appli Planning — CO-P1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&family=Hanken+Grotesk:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  :root {
+    --bg: #fdf6e9;
+    --surface: #ffffff;
+    --surface-2: #fbf0db;
+    --border: #ecdfc4;
+    --text: #3a332c;
+    --text-h: #221d17;
+    --muted: #8a7f6f;
+    --accent: #df5f4d;
+    --accent-hover: #c94e3d;
+    --accent-soft: rgba(223, 95, 77, 0.1);
+    --good: #3f7d4f;
+    --good-soft: rgba(63, 125, 79, 0.12);
+    --warn: #b3392a;
+    --warn-soft: rgba(179, 57, 42, 0.1);
+    --sans: 'Hanken Grotesk', system-ui, 'Segoe UI', Roboto, sans-serif;
+    --heading: 'Raleway', system-ui, 'Segoe UI', Roboto, sans-serif;
+    --mono: ui-monospace, 'SF Mono', Consolas, monospace;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-hover); }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+  }
+  .masthead { border-bottom: 2px solid var(--border); padding-bottom: 22px; }
+  .masthead h1 {
+    font-family: var(--heading);
+    font-weight: 800;
+    color: var(--accent);
+    font-size: 30px;
+    margin: 0 0 4px;
+  }
+  .masthead p { margin: 0; color: var(--muted); font-style: italic; font-size: 14px; }
+  h2 {
+    font-family: var(--heading);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 20px;
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-family: var(--heading);
+    font-weight: 700;
+    color: var(--text-h);
+    font-size: 15px;
+    margin: 16px 0 4px;
+  }
+  .eyebrow {
+    font-family: var(--heading);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent-hover);
+    margin-bottom: 6px;
+  }
+  section { background: transparent; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 3px 0; }
+  code {
+    font-family: var(--mono);
+    font-size: 0.88em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+  }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 8px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .card.accent { border-color: var(--accent); border-width: 2px; }
+  .card .role { font-family: var(--heading); font-weight: 700; color: var(--text-h); font-size: 16px; margin: 4px 0 6px; }
+  .card .tag { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .note, .tech {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+  .note { background: var(--accent-soft); border: 1px solid var(--accent); }
+  .tech { background: var(--surface); border: 1px dashed var(--muted); }
+  .flag-good, .flag-warn {
+    display: inline-block;
+    font-family: var(--heading);
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 999px;
+    padding: 3px 10px;
+  }
+  .flag-good { background: var(--good-soft); color: var(--good); }
+  .flag-warn { background: var(--warn-soft); color: var(--warn); }
+  footer {
+    border-top: 2px solid var(--border);
+    padding-top: 16px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <h1>Fonctionnement de l'appli Planning</h1>
+    <p>Gestion des plannings hebdomadaires — CO-P1</p>
+  </header>
+
+  <p>
+    L'appli remplace le fichier Excel des plannings hebdo. Une <strong>semaine</strong> = une
+    grille du lundi au dimanche. Chaque jour contient un ou plusieurs <strong>créneaux</strong>
+    (trajets / tournées). Les <strong>référents</strong> et les <strong>bénévoles</strong> sont
+    affectés à chaque créneau ; les bénévoles s'inscrivent eux-mêmes via un
+    <strong>lien public</strong>, sans compte.
+  </p>
+
+  <section>
+    <h2>2 rôles</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="tag">Gestion des plannings</div>
+        <div class="role">Gestionnaire</div>
+        <div>Crée, édite et archive les semaines. Ajoute / modifie / supprime les créneaux.
+          Gère les référents et les bénévoles. Partage le lien public, verrouille les
+          inscriptions.</div>
+        <div style="margin-top:6px">Ne gère pas les comptes. Ne supprime pas définitivement une
+          semaine (l'archivage suffit).</div>
+      </div>
+      <div class="card accent">
+        <div class="tag">Administration</div>
+        <div class="role">Admin</div>
+        <div>Tout ce que fait un gestionnaire, plus : dans l'onglet <strong>Utilisateurs</strong>,
+          création de comptes, modification NOM / prénom / email / téléphone / rôle, définition
+          d'un mot de passe, suppression d'un compte.</div>
+        <div style="margin-top:6px">Peut aussi supprimer <strong>définitivement</strong> une
+          semaine.</div>
+      </div>
+    </div>
+    <div class="note" style="margin-top:12px">
+      Les <strong>seuls comptes</strong> sont ceux des personnes qui gèrent le planning (une
+      petite équipe). Les bénévoles n'ont pas de compte : ils passent par le lien public.
+      Après avoir créé le tout premier compte (page <code>/inscription</code>) et l'avoir passé
+      en <code>admin</code>, on <strong>désactive l'inscription</strong> dans Supabase : plus
+      personne ne peut créer de compte de l'extérieur. Ensuite, les comptes se créent uniquement
+      depuis l'onglet <strong>Utilisateurs</strong>. (Détails dans le <code>README</code>.)
+    </div>
+  </section>
+
+  <section>
+    <h2>Semaines</h2>
+    <div class="eyebrow">Onglet Semaines</div>
+    <p>La page d'accueil liste les semaines <strong>actives</strong> (en cours et à venir).</p>
+    <ul>
+      <li><strong>+ Semaine courante</strong> / <strong>+ Semaine suivante</strong> : crée la
+        semaine correspondante. Les dates sont calées sur l'heure de <strong>Paris</strong> — le
+        lundi de la semaine en cours est calculé automatiquement.</li>
+      <li><strong>Dupliquer</strong> : nouvelle semaine en recopiant tous les créneaux et les
+        <strong>référents</strong> d'une semaine existante (pas les bénévoles). Pratique quand
+        les trajets se répètent.</li>
+      <li><strong>Surnom</strong> : le bouton « ✎ surnom » à côté du titre ajoute un surnom
+        facultatif (« Semaine de la rentrée »…). Il s'affiche <strong>en plus</strong> des
+        dates, partout, sans les remplacer.</li>
+      <li>Le lien <strong>« Voir les semaines archivées »</strong> mène aux semaines passées.</li>
+    </ul>
+    <p><span class="flag-good">Créer une semaine est réversible</span> (archivage, ou suppression
+      définitive réservée aux admins).</p>
+  </section>
+
+  <section>
+    <h2>Éditer une semaine</h2>
+    <div class="eyebrow">Semainier : heures verticales, jours en colonnes</div>
+    <p>La semaine s'affiche en <strong>grille horaire</strong> : colonnes = jours, lignes =
+      heures. Chaque créneau est un <strong>bloc coloré</strong> placé selon ses horaires ; deux
+      créneaux du même jour qui se chevauchent se mettent <strong>côte à côte</strong> ; un
+      créneau dont l'horaire n'est pas interprétable va dans la bande <strong>« heure ? »</strong>
+      en haut de la colonne. Le bouton <strong>+ Créneau</strong> est en <strong>haut</strong> de
+      chaque colonne. Le bloc affiche intitulé, horaires, référents, bénévoles et notes (tout le
+      détail dans l'infobulle au survol) ; <strong>cliquer un bloc ouvre son éditeur</strong>.
+      Le bouton <strong>« Colonnes − / + »</strong> élargit ou resserre les colonnes. Une
+      <strong>semaine archivée</strong> passe en lecture seule (ni + Créneau, ni édition) :
+      clique <strong>« Réactiver »</strong> pour la modifier de nouveau.</p>
+    <h3>Un créneau contient :</h3>
+    <ul>
+      <li>le <strong>trajet / destination</strong> (ex. <em>Rungis</em>, <em>BAPIF Saclay</em>) —
+        champ à autocomplétion sur les <strong>lieux enregistrés</strong></li>
+      <li>les <strong>horaires</strong> en texte libre (<code>8h-11h</code>,
+        <code>11h30-14h</code>, <code>17h</code>…)</li>
+      <li>le <strong>lieu de départ</strong> (ex. <em>Censier</em>, <em>BAPIF Arcueil</em>) —
+        même autocomplétion</li>
+      <li>le <strong>véhicule</strong> : <code>Ducato (Manuel)</code>, <code>Jumpy (auto)</code>,
+        <code>Europcar (auto)</code> ou <code>Sans véhicule</code></li>
+      <li><strong>au moins un référent</strong> (obligatoire) — nom ; téléphone et lien vers un
+        compte facultatifs</li>
+      <li>le <strong>nombre de places bénévoles</strong> (2 par défaut)</li>
+      <li>des <strong>notes</strong> (optionnel)</li>
+    </ul>
+    <p>Les <strong>bénévoles</strong> se gèrent depuis l'éditeur du créneau
+      (<strong>« Gérer les bénévoles »</strong>), ou par le lien public ; l'éditeur porte aussi
+      <strong>« Supprimer le créneau »</strong>. Quand un nom correspond exactement à un lieu
+      enregistré, son <strong>adresse</strong> s'affiche sous le champ.</p>
+    <div class="note"><strong>Ducato</strong> apparaît avec une pastille « boîte manuelle » :
+      pensez au permis manuelle. <strong>Europcar</strong> est signalé en vert.</div>
+  </section>
+
+  <section>
+    <h2>Lieux et couleurs</h2>
+    <div class="eyebrow">Onglet Lieux</div>
+    <p>Une liste partagée de lieux, chacun avec une <strong>adresse</strong> et une
+      <strong>couleur</strong>.</p>
+    <ul>
+      <li>L'<strong>adresse</strong> est proposée à la saisie d'un créneau (autocomplétion +
+        rappel sous le champ).</li>
+      <li>La <strong>couleur</strong> devient le fond du bloc du créneau, à l'écran
+        <strong>comme au PDF</strong> : celle du lieu de <strong>destination</strong> s'il est
+        enregistré, sinon celle du <strong>départ</strong>, sinon gris. La correspondance est
+        <strong>exacte</strong> — enregistrez chaque lieu précis (« BAPIF Arcueil », « BAPIF
+        Saclay »…). Quelques lieux d'exemple sont pré-remplis ; complétez leurs adresses.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Conflit de véhicule</h2>
+    <div class="eyebrow">Alerte automatique</div>
+    <p>Si un <strong>même véhicule</strong> (hors « Sans véhicule ») est affecté à
+      <strong>deux créneaux du même jour dont les horaires se chevauchent</strong>, un bandeau
+      rouge le signale en haut de la semaine et les créneaux concernés sont encadrés en rouge.
+      Si des horaires ne sont pas interprétables, le conflit n'est pas détecté (mieux vaut ne
+      rien signaler que signaler à tort).</p>
+  </section>
+
+  <section>
+    <h2>Lien public — inscription des bénévoles</h2>
+    <div class="eyebrow">Bouton « Lien public »</div>
+    <p>Le bouton propose deux liens (+ QR code) :</p>
+    <ul>
+      <li><strong>Lien permanent</strong> <code>…/semaine</code> : montre <strong>toujours la
+        semaine en cours</strong> et se met à jour tout seul chaque lundi. À partager une fois
+        pour toutes (groupe WhatsApp, affichage sur place).</li>
+      <li><strong>Lien de cette semaine précise</strong> <code>…/p/&lt;code&gt;</code> (code
+        court de 6 caractères) : pour diffuser une semaine à l'avance.</li>
+    </ul>
+    <p>La page publique reprend la <strong>même présentation</strong> que la version gestion
+      (mêmes blocs colorés). Sans compte, un bénévole peut :</p>
+    <ul>
+      <li>consulter toute la semaine — en <strong>vue liste</strong> (jour par jour, choisie par
+        défaut sur téléphone) ou en <strong>vue grille</strong>, via la bascule en haut ;</li>
+      <li><strong>toucher un créneau</strong> pour ouvrir sa fiche détaillée (jour, horaires,
+        départ + adresse, destination, véhicule, référents et bénévoles avec téléphones, places
+        libres, notes) ;</li>
+      <li>toucher <strong>« + M'inscrire »</strong> (sur le créneau ou dans sa fiche) s'il reste
+        des places, saisir son <strong>nom</strong> et — recommandé — son
+        <strong>téléphone</strong> ;</li>
+      <li>se <strong>retirer</strong> d'un créneau où il s'est inscrit depuis ce navigateur.</li>
+    </ul>
+    <p>Contrôles côté serveur : créneau complet, doublon de nom, semaine verrouillée →
+      l'inscription est refusée avec un message clair.</p>
+    <p><span class="flag-warn">Verrouiller</span> Le bouton <strong>« Verrouiller »</strong>
+      coupe toutes les inscriptions publiques ; la semaine reste consultable. Une semaine
+      archivée est aussi en lecture seule.</p>
+  </section>
+
+  <section>
+    <h2>Export PDF</h2>
+    <div class="eyebrow">Bouton « Exporter en PDF »</div>
+    <p>Le bouton <strong>télécharge directement un PDF</strong> (A4 paysage, une page) : en-tête
+      avec le <strong>logo</strong>, « Semaine du … » (+ le surnom), un filet aux couleurs de
+      l'appli, puis le semainier coloré. Le <strong>même format</strong> sert partout — export
+      d'une semaine <em>et</em> export groupé des archives. <strong>Seule différence</strong> :
+      le <strong>QR code</strong> du lien public n'apparaît que pour les semaines
+      <strong>actives</strong>, pas pour les archivées.</p>
+    <p><strong>Export groupé</strong> : dans l'onglet Archives, coche plusieurs semaines puis
+      <strong>« Exporter la sélection »</strong> — un PDF par semaine, réunis dans un
+      <code>.zip</code> (une seule semaine cochée → PDF direct).</p>
+  </section>
+
+  <section>
+    <h2>Archivage</h2>
+    <div class="eyebrow">Onglet Archives</div>
+    <ul>
+      <li><strong>Automatique</strong> : une semaine dont le dimanche est passé bascule en
+        <strong>archivée</strong> (au plus tard au prochain chargement de la liste).</li>
+      <li><strong>Manuel</strong> : bouton <strong>« Archiver »</strong> ;
+        <strong>« Réactiver »</strong> pour la remettre en actif et pouvoir la modifier.</li>
+    </ul>
+    <p>Une semaine archivée est en <strong>lecture seule</strong> mais reste
+      <strong>consultable et ré-exportable en PDF</strong> depuis l'onglet Archives
+      (voir <em>Export PDF</em> pour l'export groupé).</p>
+  </section>
+
+  <section>
+    <h2>Historique des modifications</h2>
+    <div class="eyebrow">En bas de chaque semaine</div>
+    <p>Chaque ajout / modification / suppression de créneau ou d'affectation est journalisé avec
+      <strong>qui</strong> (nom du compte, ou « Lien public » pour une inscription bénévole),
+      <strong>quand</strong>, et un court résumé. Section dépliable en bas de la page d'une
+      semaine.</p>
+  </section>
+
+  <section>
+    <h2>Repères techniques</h2>
+    <div class="tech">
+      <p style="margin-top:0"><strong>Base</strong> : Supabase (PostgreSQL + Auth + Edge
+        Functions). Tables : <code>profiles</code>, <code>plannings</code>,
+        <code>activites</code>, <code>affectations</code>, <code>historique</code>,
+        <code>lieux</code>.</p>
+      <p><strong>Sécurité</strong> : RLS active partout. Le public (<code>anon</code>) n'a aucun
+        accès direct aux tables : il passe uniquement par des fonctions
+        <code>SECURITY DEFINER</code> (<code>planning_public</code>,
+        <code>inscrire_benevole</code>, <code>desinscrire_benevole</code>) qui prennent le code
+        du lien en paramètre.</p>
+      <p><strong>Comptes</strong> : Edge Functions à clé <code>service_role</code>
+        (<code>admin-create-user</code>, <code>admin-set-password</code>,
+        <code>admin-update-email</code>, <code>delete-user</code>), chacune vérifiant que
+        l'appelant est <code>admin</code>.</p>
+      <p style="margin-bottom:0"><strong>Archivage auto</strong> :
+        <code>archiver_semaines_ecoulees()</code>, appelée à l'ouverture de la liste, et — si
+        <code>pg_cron</code> est activé — une fois par nuit.</p>
+    </div>
+  </section>
+
+  <footer>
+    Pour toute suggestion, demande ou problème, contacter <strong>Samuel LEGER</strong>.
+  </footer>
+
+</div>
+</body>
+</html>
