@@ -5,8 +5,10 @@ import type { ActiviteAvecAffectations, PlanningPublic } from '../types'
 import { aujourdhuiParis, joursDeLaSemaine, libelleSemaine } from '../lib/dates'
 import Semainier from '../components/Semainier'
 import SemainierListe from '../components/SemainierListe'
+import SemainierVertical from '../components/SemainierVertical'
 import CreneauDetailModal from '../components/CreneauDetailModal'
 import BenevoleSignupModal from '../components/BenevoleSignupModal'
+import { useEstMobile } from '../lib/useEstMobile'
 import logo from '../assets/logo.png'
 
 function cleStockage(token: string) {
@@ -33,14 +35,26 @@ export default function PublicPlanningPage() {
   const [inscriptionActivite, setInscriptionActivite] = useState<ActiviteAvecAffectations | null>(null)
 
   // Vue : choix mémorisé ; sinon liste sur petit écran (usage mobile), grille sinon.
-  const [vue, setVueState] = useState<'grille' | 'liste'>(() => {
+  const [vue, setVueState] = useState<'grille' | 'liste' | 'verticale'>(() => {
     const stocke = localStorage.getItem('planning-vue-public')
-    if (stocke === 'grille' || stocke === 'liste') return stocke
+    if (stocke === 'grille' || stocke === 'liste' || stocke === 'verticale') return stocke
     return typeof window !== 'undefined' && window.innerWidth < 760 ? 'liste' : 'grille'
   })
-  function setVue(v: 'grille' | 'liste') {
+  function setVue(v: 'grille' | 'liste' | 'verticale') {
     setVueState(v)
     localStorage.setItem('planning-vue-public', v)
+  }
+  // La grille classique (7 colonnes côte à côte) n'est pas praticable sur téléphone
+  // — on en sort automatiquement si la fenêtre devient trop étroite.
+  const estMobile = useEstMobile()
+  useEffect(() => {
+    if (estMobile && vue === 'grille') setVue('liste')
+  }, [estMobile, vue])
+
+  function allerAujourdhui() {
+    const el = document.getElementById('jour-' + aujourdhuiParis())
+    if (el instanceof HTMLDetailsElement) el.open = true
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   const [largeurCol, setLargeurColState] = useState(
     () => Number(localStorage.getItem('planning-largeur-col')) || 150
@@ -145,11 +159,19 @@ export default function PublicPlanningPage() {
           >
             ☰ Liste
           </button>
+          {!estMobile && (
+            <button
+              className={'small-button' + (vue === 'grille' ? ' is-actif' : '')}
+              onClick={() => setVue('grille')}
+            >
+              ▦ Grille
+            </button>
+          )}
           <button
-            className={'small-button' + (vue === 'grille' ? ' is-actif' : '')}
-            onClick={() => setVue('grille')}
+            className={'small-button' + (vue === 'verticale' ? ' is-actif' : '')}
+            onClick={() => setVue('verticale')}
           >
-            ▦ Grille
+            ↕ Vertical
           </button>
         </div>
         {vue === 'grille' && (
@@ -173,6 +195,14 @@ export default function PublicPlanningPage() {
           activites={activites}
           actionsPour={actionsPour}
         />
+      ) : vue === 'verticale' ? (
+        <SemainierVertical
+          jours={jours}
+          aujourdhui={aujourdhui}
+          lieux={lieux}
+          activites={activites}
+          actionsPour={actionsPour}
+        />
       ) : (
         <Semainier
           jours={jours}
@@ -182,6 +212,12 @@ export default function PublicPlanningPage() {
           largeurColonne={largeurCol}
           actionsPour={actionsPour}
         />
+      )}
+
+      {vue !== 'grille' && jours.includes(aujourdhui) && (
+        <button className="jour-actuel-fab" onClick={allerAujourdhui}>
+          📅 Aujourd'hui
+        </button>
       )}
 
       {detailActivite && (

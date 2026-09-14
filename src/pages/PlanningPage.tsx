@@ -15,6 +15,8 @@ import type {
 import { aujourdhuiParis, joursDeLaSemaine, libelleSemaine } from '../lib/dates'
 import { activitesEnConflit, detecterConflitsVehicule } from '../lib/conflitsVehicule'
 import Semainier from '../components/Semainier'
+import SemainierListe from '../components/SemainierListe'
+import SemainierVertical from '../components/SemainierVertical'
 import ActiviteEditor from '../components/ActiviteEditor'
 import AffectationsEditor from '../components/AffectationsEditor'
 import type { CompteMin } from '../lib/personnes'
@@ -22,6 +24,7 @@ import LienPublicModal from '../components/LienPublicModal'
 import { lienPublic } from '../lib/lienPublic'
 import DupliquerModal from '../components/DupliquerModal'
 import RenommerSemaineModal from '../components/RenommerSemaineModal'
+import { useEstMobile } from '../lib/useEstMobile'
 import logo from '../assets/logo.png'
 
 type ActiviteRow = Activite & { affectations: Affectation[] | null }
@@ -52,6 +55,28 @@ export default function PlanningPage() {
     const clamp = Math.max(120, Math.min(320, v))
     setLargeurColState(clamp)
     localStorage.setItem('planning-largeur-col', String(clamp))
+  }
+  // Vue : choix mémorisé ; sinon liste sur petit écran (usage mobile), grille sinon.
+  const [vue, setVueState] = useState<'grille' | 'liste' | 'verticale'>(() => {
+    const stocke = localStorage.getItem('planning-vue-admin')
+    if (stocke === 'grille' || stocke === 'liste' || stocke === 'verticale') return stocke
+    return typeof window !== 'undefined' && window.innerWidth < 760 ? 'liste' : 'grille'
+  })
+  function setVue(v: 'grille' | 'liste' | 'verticale') {
+    setVueState(v)
+    localStorage.setItem('planning-vue-admin', v)
+  }
+  // La grille classique (7 colonnes côte à côte) n'est pas praticable sur téléphone
+  // — on en sort automatiquement si la fenêtre devient trop étroite.
+  const estMobile = useEstMobile()
+  useEffect(() => {
+    if (estMobile && vue === 'grille') setVue('liste')
+  }, [estMobile, vue])
+
+  function allerAujourdhui() {
+    const el = document.getElementById('jour-' + aujourdhuiParis())
+    if (el instanceof HTMLDetailsElement) el.open = true
+    el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   const load = useCallback(async () => {
@@ -198,23 +223,6 @@ export default function PlanningPage() {
           {planning.verrouille && <span className="tag is-verrou">Verrouillé</span>}
         </h1>
         <div className="page-header-actions">
-          <span className="col-stepper">
-            Colonnes
-            <button
-              className="small-button"
-              onClick={() => setLargeurCol(largeurCol - 20)}
-              aria-label="Colonnes plus étroites"
-            >
-              −
-            </button>
-            <button
-              className="small-button"
-              onClick={() => setLargeurCol(largeurCol + 20)}
-              aria-label="Colonnes plus larges"
-            >
-              +
-            </button>
-          </span>
           <button className="small-button" disabled={busy} onClick={exporterPdf}>
             🖨 Exporter en PDF
           </button>
@@ -283,26 +291,118 @@ export default function PlanningPage() {
         </div>
       )}
 
-      <Semainier
-        jours={jours}
-        aujourdhui={aujourdhui}
-        lieux={lieux}
-        activites={activites}
-        conflitIds={conflitIds}
-        largeurColonne={largeurCol}
-        actionsPour={
-          archive ? undefined : (a) => ({ onEditer: () => setEditeur({ activite: a }) })
-        }
-        actionJour={
-          archive
-            ? undefined
-            : (jour) => (
-                <button className="small-button" onClick={() => setEditeur({ jour })}>
-                  + Créneau
-                </button>
-              )
-        }
-      />
+      <div className="week-toolbar">
+        <div className="vue-toggle" role="group" aria-label="Affichage">
+          <button
+            className={'small-button' + (vue === 'liste' ? ' is-actif' : '')}
+            onClick={() => setVue('liste')}
+          >
+            ☰ Liste
+          </button>
+          {!estMobile && (
+            <button
+              className={'small-button' + (vue === 'grille' ? ' is-actif' : '')}
+              onClick={() => setVue('grille')}
+            >
+              ▦ Grille
+            </button>
+          )}
+          <button
+            className={'small-button' + (vue === 'verticale' ? ' is-actif' : '')}
+            onClick={() => setVue('verticale')}
+          >
+            ↕ Vertical
+          </button>
+        </div>
+        {vue === 'grille' && (
+          <span className="col-stepper">
+            Colonnes
+            <button
+              className="small-button"
+              onClick={() => setLargeurCol(largeurCol - 20)}
+              aria-label="Colonnes plus étroites"
+            >
+              −
+            </button>
+            <button
+              className="small-button"
+              onClick={() => setLargeurCol(largeurCol + 20)}
+              aria-label="Colonnes plus larges"
+            >
+              +
+            </button>
+          </span>
+        )}
+      </div>
+
+      {vue === 'liste' ? (
+        <SemainierListe
+          jours={jours}
+          aujourdhui={aujourdhui}
+          lieux={lieux}
+          activites={activites}
+          conflitIds={conflitIds}
+          actionsPour={
+            archive ? undefined : (a) => ({ onEditer: () => setEditeur({ activite: a }) })
+          }
+          actionJour={
+            archive
+              ? undefined
+              : (jour) => (
+                  <button className="small-button" onClick={() => setEditeur({ jour })}>
+                    + Créneau
+                  </button>
+                )
+          }
+        />
+      ) : vue === 'verticale' ? (
+        <SemainierVertical
+          jours={jours}
+          aujourdhui={aujourdhui}
+          lieux={lieux}
+          activites={activites}
+          conflitIds={conflitIds}
+          actionsPour={
+            archive ? undefined : (a) => ({ onEditer: () => setEditeur({ activite: a }) })
+          }
+          actionJour={
+            archive
+              ? undefined
+              : (jour) => (
+                  <button className="small-button" onClick={() => setEditeur({ jour })}>
+                    + Créneau
+                  </button>
+                )
+          }
+        />
+      ) : (
+        <Semainier
+          jours={jours}
+          aujourdhui={aujourdhui}
+          lieux={lieux}
+          activites={activites}
+          conflitIds={conflitIds}
+          largeurColonne={largeurCol}
+          actionsPour={
+            archive ? undefined : (a) => ({ onEditer: () => setEditeur({ activite: a }) })
+          }
+          actionJour={
+            archive
+              ? undefined
+              : (jour) => (
+                  <button className="small-button" onClick={() => setEditeur({ jour })}>
+                    + Créneau
+                  </button>
+                )
+          }
+        />
+      )}
+
+      {vue !== 'grille' && jours.includes(aujourdhui) && (
+        <button className="jour-actuel-fab" onClick={allerAujourdhui}>
+          📅 Aujourd'hui
+        </button>
+      )}
 
       <details className="historique" open={historique.length > 0 && historique.length <= 8}>
         <summary>Historique des modifications ({historique.length})</summary>

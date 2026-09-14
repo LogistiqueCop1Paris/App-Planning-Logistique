@@ -145,6 +145,12 @@
     <strong>lien public</strong>, sans compte.
   </p>
 
+  <p>
+    Sur téléphone, le menu principal passe dans un <strong>tiroir</strong> : le bouton
+    <strong>☰</strong> en haut à droite ouvre un panneau depuis la droite (fond flouté
+    derrière, on referme en touchant à côté).
+  </p>
+
   <section>
     <h2>2 rôles</h2>
     <div class="cards">
@@ -186,8 +192,8 @@
         semaine correspondante. Les dates sont calées sur l'heure de <strong>Paris</strong> — le
         lundi de la semaine en cours est calculé automatiquement.</li>
       <li><strong>Dupliquer</strong> : nouvelle semaine en recopiant tous les créneaux et les
-        <strong>référents</strong> d'une semaine existante (pas les bénévoles). Pratique quand
-        les trajets se répètent.</li>
+        <strong>référents</strong> d'une semaine existante (pas les bénévoles). L'appli propose
+        la <strong>première semaine libre</strong> ; on peut en choisir une autre.</li>
       <li><strong>Surnom</strong> : le bouton « ✎ surnom » à côté du titre ajoute un surnom
         facultatif (« Semaine de la rentrée »…). Il s'affiche <strong>en plus</strong> des
         dates, partout, sans les remplacer.</li>
@@ -199,17 +205,33 @@
 
   <section>
     <h2>Éditer une semaine</h2>
-    <div class="eyebrow">Semainier : heures verticales, jours en colonnes</div>
-    <p>La semaine s'affiche en <strong>grille horaire</strong> : colonnes = jours, lignes =
-      heures. Chaque créneau est un <strong>bloc coloré</strong> placé selon ses horaires ; deux
-      créneaux du même jour qui se chevauchent se mettent <strong>côte à côte</strong> ; un
-      créneau dont l'horaire n'est pas interprétable va dans la bande <strong>« heure ? »</strong>
-      en haut de la colonne. Le bouton <strong>+ Créneau</strong> est en <strong>haut</strong> de
-      chaque colonne. Le bloc affiche intitulé, horaires, référents, bénévoles et notes (tout le
-      détail dans l'infobulle au survol) ; <strong>cliquer un bloc ouvre son éditeur</strong>.
-      Le bouton <strong>« Colonnes − / + »</strong> élargit ou resserre les colonnes. Une
-      <strong>semaine archivée</strong> passe en lecture seule (ni + Créneau, ni édition) :
-      clique <strong>« Réactiver »</strong> pour la modifier de nouveau.</p>
+    <div class="eyebrow">Trois affichages : Liste, Grille, Vertical</div>
+    <p>Un bandeau <strong>Liste / Grille / Vertical</strong> en haut de la semaine bascule entre
+      trois affichages (le choix est mémorisé) :</p>
+    <ul>
+      <li><strong>Grille</strong> : vue classique, colonnes = jours, lignes = heures, les 7
+        jours côte à côte. Idéale sur grand écran ; <strong>masquée automatiquement sur
+        téléphone</strong> (trop étroite pour rester lisible sur un petit écran).</li>
+      <li><strong>Vertical</strong> : même principe (axe des heures vertical, créneaux qui se
+        chevauchent côte à côte) mais <strong>un jour à la fois, pleine largeur</strong> — pensé
+        pour le portrait mobile.</li>
+      <li><strong>Liste</strong> : les créneaux de chaque jour, triés par heure et regroupés par
+        <strong>Matin / Après-midi / Soir</strong>.</li>
+    </ul>
+    <p>En vue <strong>Liste</strong> et <strong>Vertical</strong>, chaque jour est un
+      <strong>bloc repliable</strong> : seul <strong>aujourd'hui</strong> s'ouvre
+      automatiquement au chargement, les autres jours restent repliés (un tap sur l'en-tête les
+      ouvre) — moins de défilement sur une semaine chargée. Le bouton flottant
+      <strong>« 📅 Aujourd'hui »</strong> ramène directement au jour courant.</p>
+    <p>Quel que soit l'affichage, un créneau est un <strong>bloc coloré</strong> qui met les
+      <strong>horaires en gros, en premier</strong>, puis l'intitulé, les référents, les
+      bénévoles et les notes (détail complet dans l'infobulle au survol) ;
+      <strong>cliquer un bloc ouvre son éditeur</strong>. Un créneau dont l'horaire n'est pas
+      interprétable va dans la bande <strong>« heure ? »</strong>. Le bouton
+      <strong>+ Créneau</strong> est en <strong>haut</strong> de chaque colonne / section de
+      jour. En vue Grille, le bouton <strong>« Colonnes − / + »</strong> élargit ou resserre les
+      colonnes. Une <strong>semaine archivée</strong> passe en lecture seule (ni + Créneau, ni
+      édition) : clique <strong>« Réactiver »</strong> pour la modifier de nouveau.</p>
     <h3>Un créneau contient :</h3>
     <ul>
       <li>le <strong>trajet / destination</strong> (ex. <em>Rungis</em>, <em>BAPIF Saclay</em>) —
@@ -273,8 +295,9 @@
     <p>La page publique reprend la <strong>même présentation</strong> que la version gestion
       (mêmes blocs colorés). Sans compte, un bénévole peut :</p>
     <ul>
-      <li>consulter toute la semaine — en <strong>vue liste</strong> (jour par jour, choisie par
-        défaut sur téléphone) ou en <strong>vue grille</strong>, via la bascule en haut ;</li>
+      <li>consulter toute la semaine dans les <strong>mêmes trois vues</strong> que côté gestion
+        (Liste, Grille, Vertical) — Liste par défaut sur téléphone, Grille masquée sur petit
+        écran ;</li>
       <li><strong>toucher un créneau</strong> pour ouvrir sa fiche détaillée (jour, horaires,
         départ + adresse, destination, véhicule, référents et bénévoles avec téléphones, places
         libres, notes) ;</li>

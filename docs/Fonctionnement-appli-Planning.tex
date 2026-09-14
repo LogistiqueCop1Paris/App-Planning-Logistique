@@ -100,6 +100,11 @@ grille du lundi au dimanche. Chaque jour contient un ou plusieurs \textbf{créne
 tournées). Les \textbf{référents} et les \textbf{bénévoles} sont affectés à chaque créneau ; les
 bénévoles s'inscrivent eux-mêmes via un \textbf{lien public}, sans compte.
 
+\vspace{4pt}
+\noindent Sur téléphone, le menu principal passe dans un \textbf{tiroir} : le bouton à trois
+barres en haut à droite ouvre un panneau depuis la droite (fond flouté derrière, on referme en
+touchant à côté).
+
 % ---------- Rôles ----------
 \section{2 rôles}
 
@@ -144,8 +149,9 @@ La page d'accueil liste les semaines \textbf{actives} (en cours et à venir).
   correspondante. Les dates sont calées sur l'heure de \textbf{Paris} — le lundi de la semaine
   en cours est calculé automatiquement, pas besoin de le saisir.
   \item \textbf{Dupliquer} : crée une nouvelle semaine en recopiant tous les créneaux et les
-  \textbf{référents} d'une semaine existante (les bénévoles ne sont pas recopiés). Pratique
-  quand les trajets se répètent d'une semaine à l'autre.
+  \textbf{référents} d'une semaine existante (les bénévoles ne sont pas recopiés). L'appli
+  propose la \textbf{première semaine libre} ; on peut en choisir une autre. Pratique quand
+  les trajets se répètent d'une semaine à l'autre.
   \item \textbf{Surnom} : le bouton « surnom » à côté du titre ajoute un surnom facultatif
   (« Semaine de la rentrée »…). Il s'affiche \textbf{en plus} des dates, partout, sans les
   remplacer.
@@ -157,17 +163,34 @@ aux admins)
 
 % ---------- Une semaine ----------
 \section{Éditer une semaine}
-\eyebrow{Semainier : heures verticales, jours en colonnes}
+\eyebrow{Trois affichages : Liste, Grille, Vertical}
 
-La semaine s'affiche en \textbf{grille horaire} : colonnes = jours, lignes = heures. Chaque
-créneau est un \textbf{bloc coloré} placé selon ses horaires ; deux créneaux du même jour qui
-se chevauchent se mettent \textbf{côte à côte} ; un créneau dont l'horaire n'est pas
-interprétable va dans la bande \textbf{« heure ? »} en haut de la colonne. Le bouton
-\textbf{+ Créneau} est en \textbf{haut} de chaque colonne. Le bloc affiche intitulé, horaires,
-référents, bénévoles et notes (tout le détail dans l'infobulle au survol) ; \textbf{cliquer un
-bloc ouvre son éditeur}. Le bouton \textbf{« Colonnes - / + »} élargit ou resserre les
-colonnes. Une \textbf{semaine archivée} passe en lecture seule (ni + Créneau, ni édition des
-blocs) : cliquez \textbf{« Réactiver »} pour la modifier de nouveau.
+Un bandeau \textbf{Liste / Grille / Vertical} en haut de la semaine bascule entre trois
+affichages (le choix est mémorisé) :
+\begin{itemize}
+  \item \textbf{Grille} : vue classique, colonnes = jours, lignes = heures, les 7 jours côte à
+  côte. Idéale sur grand écran ; \textbf{masquée automatiquement sur téléphone} (trop étroite
+  pour rester lisible sur un petit écran).
+  \item \textbf{Vertical} : même principe (axe des heures vertical, créneaux qui se
+  chevauchent côte à côte) mais \textbf{un jour à la fois, pleine largeur} — pensé pour le
+  portrait mobile.
+  \item \textbf{Liste} : les créneaux de chaque jour, triés par heure et regroupés par
+  \textbf{Matin / Après-midi / Soir}.
+\end{itemize}
+
+En vue \textbf{Liste} et \textbf{Vertical}, chaque jour est un \textbf{bloc repliable} : seul
+\textbf{aujourd'hui} s'ouvre automatiquement au chargement, les autres jours restent repliés
+(un tap sur l'en-tête les ouvre) — moins de défilement sur une semaine chargée. Le bouton
+flottant \textbf{« Aujourd'hui »} ramène directement au jour courant.
+
+Quel que soit l'affichage, un créneau est un \textbf{bloc coloré} qui met les \textbf{horaires
+en gros, en premier}, puis l'intitulé, les référents, les bénévoles et les notes (détail complet
+dans l'infobulle au survol) ; \textbf{cliquer un bloc ouvre son éditeur}. Un créneau dont
+l'horaire n'est pas interprétable va dans la bande \textbf{« heure ? »}. Le bouton
+\textbf{+ Créneau} est en \textbf{haut} de chaque colonne / section de jour. En vue Grille, le
+bouton \textbf{« Colonnes - / + »} élargit ou resserre les colonnes. Une \textbf{semaine
+archivée} passe en lecture seule (ni + Créneau, ni édition des blocs) : cliquez
+\textbf{« Réactiver »} pour la modifier de nouveau.
 
 \subsection*{Un créneau contient :}
 \begin{itemize}
@@ -238,8 +261,8 @@ Le bouton propose deux liens (+ QR code) :
 La page publique reprend la \textbf{même présentation} que la version gestion (mêmes blocs
 colorés). Sans compte, un bénévole peut :
 \begin{itemize}
-  \item consulter toute la semaine — en \textbf{vue liste} (jour par jour, choisie par défaut
-  sur téléphone) ou en \textbf{vue grille}, via la bascule en haut ;
+  \item consulter toute la semaine dans les \textbf{mêmes trois vues} que côté gestion (Liste,
+  Grille, Vertical) — Liste choisie par défaut sur téléphone, Grille masquée sur petit écran ;
   \item \textbf{toucher un créneau} pour ouvrir sa fiche détaillée (jour, horaires, départ +
   adresse, destination, véhicule, référents et bénévoles avec téléphones, places libres, notes) ;
   \item toucher \textbf{« + M'inscrire »} (sur le créneau ou dans sa fiche) s'il reste des
@@ -302,8 +325,8 @@ Tables : \texttt{profiles}, \texttt{plannings}, \texttt{activites}, \texttt{affe
 \vspace{4pt}
 \textbf{Sécurité} : RLS active partout. Le public (\texttt{anon}) n'a \emph{aucun} accès direct
 aux tables : il passe uniquement par des fonctions \texttt{SECURITY DEFINER}
-(\texttt{planning\_public}, \texttt{inscrire\_benevole}, \texttt{desinscrire\_benevole}) qui
-prennent le code du lien en paramètre.
+(\texttt{planning\_public}, \texttt{planning\_public\_courant}, \texttt{inscrire\_benevole},
+\texttt{desinscrire\_benevole}) qui prennent le code du lien en paramètre.
 
 \vspace{4pt}
 \textbf{Comptes} : gérés par des Edge Functions à clé \texttt{service\_role}

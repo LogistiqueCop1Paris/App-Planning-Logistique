@@ -68,14 +68,14 @@ export default function CreneauBloc({
   const contenu = (
     <>
       <div className="sem-bloc-tete">
-        <span className="sem-bloc-titre">{activite.intitule || 'Créneau'}</span>
+        <span className="sem-bloc-horaire">{activite.horaires || 'Heure ?'}</span>
         {activite.vehicule && activite.vehicule !== 'Sans véhicule' && (
           <span className={'veh-badge ' + classeBadgeVehicule(activite.vehicule)}>
             {vehiculeCourt(activite.vehicule)}
           </span>
         )}
       </div>
-      {activite.horaires && <div className="sem-bloc-ligne">{activite.horaires}</div>}
+      <div className="sem-bloc-titre">{activite.intitule || 'Créneau'}</div>
       {refsTxt && (
         <div className="sem-bloc-ligne">
           <span className="k">Réf</span> {refsTxt}
