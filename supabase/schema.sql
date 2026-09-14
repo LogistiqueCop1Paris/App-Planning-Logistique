@@ -152,9 +152,12 @@ create table if not exists public.lieux (
 );
 
 -- Migration : la couleur d'un lieu est désormais une couleur libre (hex) choisie dans un
--- sélecteur, plus une palette figée de 9 noms. On convertit d'abord les anciennes valeurs
--- nommées vers leur équivalent hex, puis on remplace la contrainte enum par une contrainte
--- de format hex (#RRGGBB).
+-- sélecteur, plus une palette figée de 9 noms. On retire d'abord l'ancienne contrainte enum
+-- (sinon la conversion ci-dessous vers du hex la violerait), on convertit les anciennes
+-- valeurs nommées vers leur équivalent hex, puis on ajoute la nouvelle contrainte de format
+-- hex (#RRGGBB).
+alter table public.lieux drop constraint if exists lieux_couleur_check;
+
 update public.lieux set couleur = case couleur
   when 'orange' then '#E08A3C'
   when 'vert' then '#4E9E63'
@@ -169,7 +172,6 @@ update public.lieux set couleur = case couleur
 end
 where couleur !~ '^#[0-9A-Fa-f]{6}$';
 
-alter table public.lieux drop constraint if exists lieux_couleur_check;
 alter table public.lieux add constraint lieux_couleur_check check (couleur ~ '^#[0-9A-Fa-f]{6}$');
 alter table public.lieux alter column couleur set default '#A99F8C';
 
