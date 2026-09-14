@@ -41,16 +41,8 @@ export interface Activite {
   created_at: string
 }
 
-export type CouleurLieu =
-  | 'orange'
-  | 'vert'
-  | 'bleu'
-  | 'rouge'
-  | 'violet'
-  | 'turquoise'
-  | 'jaune'
-  | 'rose'
-  | 'gris'
+/** Couleur libre d'un lieu, au format hex (ex. `#E08A3C`). */
+export type CouleurLieu = string
 
 export interface Lieu {
   id: string

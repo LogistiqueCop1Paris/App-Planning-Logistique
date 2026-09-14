@@ -3,7 +3,7 @@ import type { ActiviteAvecAffectations, Lieu, Planning } from '../types'
 import { formatJourCourt, joursDeLaSemaine, libelleSemaine, nomJour } from './dates'
 import { calculerSemainier, placerJour } from './semainier'
 import { couleurActivite } from './lieux'
-import { COULEURS_LIEU } from './couleurs'
+import { nuanceLieu } from './couleurs'
 import { vehiculeCourt } from './vehicules'
 import logoUrl from '../assets/logo.png'
 
@@ -191,7 +191,7 @@ export function genererPdfSemaine(
       const x = gridLeft + i * colW
       let yy = gridTop + headH + 4
       for (const a of sansHeureParJour[j]) {
-        const c = COULEURS_LIEU[couleurActivite(a, lieux)]
+        const c = nuanceLieu(couleurActivite(a, lieux))
         doc.setFillColor(...hexRgb(c.bg))
         doc.setDrawColor(...hexRgb(c.bord))
         doc.rect(x + 1, yy, colW - 2, 8.5, 'FD')
@@ -221,7 +221,7 @@ export function genererPdfSemaine(
       const bx = colX + (p.col / p.ncol) * colW + 1
       const by = railTop + ((p.debut - h0 * 60) / 60) * hourPx
       const bh = Math.max(15, ((p.fin - p.debut) / 60) * hourPx)
-      const c = COULEURS_LIEU[couleurActivite(p.a, lieux)]
+      const c = nuanceLieu(couleurActivite(p.a, lieux))
       doc.setFillColor(...hexRgb(c.bg))
       doc.setDrawColor(...hexRgb(c.bord))
       doc.setLineWidth(0.7)

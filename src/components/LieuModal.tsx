@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import type { CouleurLieu, Lieu } from '../types'
-import { COULEURS_KEYS, COULEURS_LIEU } from '../lib/couleurs'
+import { COULEUR_DEFAUT, SUGGESTIONS_COULEUR, normaliserHex, nuanceLieu } from '../lib/couleurs'
 import Modal from './Modal'
 
 interface Props {
@@ -13,9 +13,18 @@ interface Props {
 export default function LieuModal({ lieu, onClose, onSaved }: Props) {
   const [nom, setNom] = useState(lieu?.nom ?? '')
   const [adresse, setAdresse] = useState(lieu?.adresse ?? '')
-  const [couleur, setCouleur] = useState<CouleurLieu>(lieu?.couleur ?? 'gris')
+  const [couleur, setCouleur] = useState<CouleurLieu>(
+    () => normaliserHex(lieu?.couleur) ?? COULEUR_DEFAUT
+  )
+  const [hexDraft, setHexDraft] = useState(couleur)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+
+  function choisirCouleur(hex: string) {
+    setCouleur(hex)
+    setHexDraft(hex)
+  }
+  const apercu = nuanceLieu(couleur)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -63,22 +72,44 @@ export default function LieuModal({ lieu, onClose, onSaved }: Props) {
           />
         </label>
         <span className="label-comme">Couleur</span>
+        <div className="couleur-picker">
+          <input
+            type="color"
+            value={couleur}
+            onChange={(e) => choisirCouleur(e.target.value)}
+            aria-label="Choisir une couleur"
+          />
+          <input
+            className="couleur-hex"
+            value={hexDraft}
+            onChange={(e) => {
+              setHexDraft(e.target.value)
+              const v = normaliserHex(e.target.value)
+              if (v) setCouleur(v)
+            }}
+            onBlur={() => setHexDraft(couleur)}
+            maxLength={7}
+            spellCheck={false}
+          />
+          <span
+            className="couleur-apercu"
+            style={{ background: apercu.bg, borderColor: apercu.bord, color: apercu.texte }}
+          >
+            Aperçu
+          </span>
+        </div>
         <div className="couleur-choix">
-          {COULEURS_KEYS.map((k) => {
-            const c = COULEURS_LIEU[k]
-            return (
-              <button
-                type="button"
-                key={k}
-                className={'couleur-pastille' + (couleur === k ? ' is-actif' : '')}
-                style={{ background: c.bg, borderColor: c.bord, color: c.texte }}
-                onClick={() => setCouleur(k)}
-                title={c.label}
-              >
-                {c.label}
-              </button>
-            )
-          })}
+          {SUGGESTIONS_COULEUR.map((hex) => (
+            <button
+              type="button"
+              key={hex}
+              className={'couleur-pastille' + (couleur === hex ? ' is-actif' : '')}
+              style={{ background: hex }}
+              onClick={() => choisirCouleur(hex)}
+              title={hex}
+              aria-label={hex}
+            />
+          ))}
         </div>
         {error && <p className="error">{error}</p>}
         <button type="submit" disabled={saving}>

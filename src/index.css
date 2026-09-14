@@ -737,53 +737,6 @@ main {
   padding: 1px 4px;
 }
 
-/* Palette des lieux (fond de bloc) */
-.bloc-couleur-orange {
-  background: #fbe7d4;
-  border-color: #e08a3c;
-  color: #8a4a12;
-}
-.bloc-couleur-vert {
-  background: #ddeedf;
-  border-color: #4e9e63;
-  color: #2e6b3c;
-}
-.bloc-couleur-bleu {
-  background: #dce8f5;
-  border-color: #4c86c6;
-  color: #244e7a;
-}
-.bloc-couleur-rouge {
-  background: #f7dfdc;
-  border-color: #c9503e;
-  color: #8a2e22;
-}
-.bloc-couleur-violet {
-  background: #e8e0f2;
-  border-color: #8a6bb8;
-  color: #4c3a6e;
-}
-.bloc-couleur-turquoise {
-  background: #d8eeec;
-  border-color: #3fa69b;
-  color: #1f5e58;
-}
-.bloc-couleur-jaune {
-  background: #f7efcf;
-  border-color: #c9a93c;
-  color: #6e5a12;
-}
-.bloc-couleur-rose {
-  background: #f7e0ec;
-  border-color: #c96ea0;
-  color: #8a3a66;
-}
-.bloc-couleur-gris {
-  background: #ece6da;
-  border-color: #a99f8c;
-  color: #4a4438;
-}
-
 .veh-badge {
   display: inline-block;
   font-size: 10px;
@@ -813,14 +766,30 @@ main {
   margin-bottom: 6px;
 }
 
-.couleur-choix {
+.couleur-picker {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 14px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-.couleur-pastille {
+.couleur-picker input[type='color'] {
+  width: 40px;
+  height: 34px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.couleur-hex {
+  width: 90px;
+  font-family: ui-monospace, monospace;
+  text-transform: lowercase;
+}
+
+.couleur-apercu {
   font-family: var(--sans);
   font-weight: 600;
   font-size: 12px;
@@ -829,15 +798,44 @@ main {
   padding: 3px 10px;
 }
 
+.couleur-choix {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.couleur-pastille {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--surface);
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px var(--border);
+  cursor: pointer;
+  padding: 0;
+}
+
 .couleur-pastille.is-actif {
   outline: 2px solid var(--text-h);
   outline-offset: 1px;
 }
 
-.couleur-pastille.is-inline {
+.couleur-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.couleur-badge .couleur-pastille {
   cursor: default;
-  padding: 2px 8px;
-  font-size: 11px;
+  width: 18px;
+  height: 18px;
+}
+
+.couleur-badge code {
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.75;
 }
 
 .card-actions {

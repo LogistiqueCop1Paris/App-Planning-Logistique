@@ -1,4 +1,5 @@
 import type { Activite, CouleurLieu, Lieu } from '../types'
+import { COULEUR_DEFAUT } from './couleurs'
 
 type LieuMin = Pick<Lieu, 'nom' | 'adresse' | 'couleur'>
 
@@ -27,7 +28,7 @@ export function couleurActivite(
   return (
     trouverLieu(act.intitule, lieux)?.couleur ??
     trouverLieu(act.lieu_depart, lieux)?.couleur ??
-    'gris'
+    COULEUR_DEFAUT
   )
 }
 

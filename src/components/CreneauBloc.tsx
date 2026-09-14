@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 import type { ActiviteAvecAffectations, CouleurLieu } from '../types'
+import { nuanceLieu } from '../lib/couleurs'
 import { classeBadgeVehicule, vehiculeCourt } from '../lib/vehicules'
 
 interface Props {
@@ -58,12 +59,20 @@ export default function CreneauBloc({
     .filter(Boolean)
     .join('\n')
 
+  const nuance = nuanceLieu(couleur)
+
   const className =
-    'sem-bloc bloc-couleur-' +
-    couleur +
+    'sem-bloc' +
     (positionne ? ' is-positionne' : ' is-statique') +
     (enConflit ? ' is-conflit' : '') +
     (ouvrir ? ' is-editable' : '')
+
+  const styleCouleur: CSSProperties = {
+    background: nuance.bg,
+    borderColor: nuance.bord,
+    color: nuance.texte,
+    ...style,
+  }
 
   const contenu = (
     <>
@@ -94,7 +103,7 @@ export default function CreneauBloc({
   )
 
   return (
-    <div className={className} style={style} title={infobulle}>
+    <div className={className} style={styleCouleur} title={infobulle}>
       {ouvrir ? (
         <button type="button" className="sem-bloc-ouvrir" onClick={ouvrir}>
           {contenu}

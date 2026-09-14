@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient'
 import type { Planning } from '../types'
 import { aujourdhuiParis, ajouterJours, libelleSemaine, lundiDeLaSemaine } from '../lib/dates'
 import DupliquerModal from '../components/DupliquerModal'
+import CreerSemaineModal from '../components/CreerSemaineModal'
 
 export default function PlanningsListPage() {
   const [plannings, setPlannings] = useState<Planning[]>([])
@@ -11,6 +12,7 @@ export default function PlanningsListPage() {
   const [error, setError] = useState<string | null>(null)
   const [creating, setCreating] = useState(false)
   const [dupliquer, setDupliquer] = useState<Planning | null>(null)
+  const [creerAutre, setCreerAutre] = useState(false)
   const navigate = useNavigate()
 
   const lundiCourant = lundiDeLaSemaine(aujourdhuiParis())
@@ -75,6 +77,9 @@ export default function PlanningsListPage() {
               + Semaine suivante
             </button>
           )}
+          <button className="secondary-button" onClick={() => setCreerAutre(true)}>
+            + Autre semaine…
+          </button>
         </div>
       </div>
 
@@ -116,6 +121,8 @@ export default function PlanningsListPage() {
       </p>
 
       {dupliquer && <DupliquerModal source={dupliquer} onClose={() => setDupliquer(null)} />}
+
+      {creerAutre && <CreerSemaineModal onClose={() => setCreerAutre(false)} />}
     </div>
   )
 }

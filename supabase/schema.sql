@@ -147,24 +147,44 @@ create table if not exists public.lieux (
   id uuid primary key default gen_random_uuid(),
   nom text not null unique,
   adresse text,
-  couleur text not null default 'gris' check (
-    couleur in ('orange', 'vert', 'bleu', 'rouge', 'violet', 'turquoise', 'jaune', 'rose', 'gris')
-  ),
+  couleur text not null default '#A99F8C',
   created_at timestamptz not null default now()
 );
+
+-- Migration : la couleur d'un lieu est désormais une couleur libre (hex) choisie dans un
+-- sélecteur, plus une palette figée de 9 noms. On convertit d'abord les anciennes valeurs
+-- nommées vers leur équivalent hex, puis on remplace la contrainte enum par une contrainte
+-- de format hex (#RRGGBB).
+update public.lieux set couleur = case couleur
+  when 'orange' then '#E08A3C'
+  when 'vert' then '#4E9E63'
+  when 'bleu' then '#4C86C6'
+  when 'rouge' then '#C9503E'
+  when 'violet' then '#8A6BB8'
+  when 'turquoise' then '#3FA69B'
+  when 'jaune' then '#C9A93C'
+  when 'rose' then '#C96EA0'
+  when 'gris' then '#A99F8C'
+  else couleur
+end
+where couleur !~ '^#[0-9A-Fa-f]{6}$';
+
+alter table public.lieux drop constraint if exists lieux_couleur_check;
+alter table public.lieux add constraint lieux_couleur_check check (couleur ~ '^#[0-9A-Fa-f]{6}$');
+alter table public.lieux alter column couleur set default '#A99F8C';
 
 -- Lieux vus dans l'Excel d'exemple, avec une couleur de départ (adresses à compléter
 -- ensuite depuis la page Lieux). `on conflict do nothing` : ne réécrit jamais un lieu déjà là.
 insert into public.lieux (nom, couleur) values
-  ('Censier', 'gris'),
-  ('BAPIF Arcueil', 'orange'),
-  ('BAPIF Saclay', 'orange'),
-  ('BAPIF Cachan et Sceaux', 'orange'),
-  ('BAPIF St Denis', 'orange'),
-  ('BAPIF Paris', 'orange'),
-  ('Stock St-Ouen', 'bleu'),
-  ('Rungis', 'vert'),
-  ('École Boulangerie', 'violet')
+  ('Censier', '#A99F8C'),
+  ('BAPIF Arcueil', '#E08A3C'),
+  ('BAPIF Saclay', '#E08A3C'),
+  ('BAPIF Cachan et Sceaux', '#E08A3C'),
+  ('BAPIF St Denis', '#E08A3C'),
+  ('BAPIF Paris', '#E08A3C'),
+  ('Stock St-Ouen', '#4C86C6'),
+  ('Rungis', '#4E9E63'),
+  ('École Boulangerie', '#8A6BB8')
 on conflict (nom) do nothing;
 
 -- =========================================================================

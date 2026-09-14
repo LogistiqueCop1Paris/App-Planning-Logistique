@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import type { Lieu } from '../types'
-import { couleurLieu } from '../lib/couleurs'
+import { nuanceLieu } from '../lib/couleurs'
 import LieuModal from '../components/LieuModal'
 
 export default function LieuxPage() {
@@ -67,17 +67,15 @@ export default function LieuxPage() {
             </thead>
             <tbody>
               {lieux.map((l) => {
-                const c = couleurLieu(l.couleur)
+                const c = nuanceLieu(l.couleur)
                 return (
                   <tr key={l.id}>
                     <td>{l.nom}</td>
                     <td>{l.adresse ?? '—'}</td>
                     <td>
-                      <span
-                        className="couleur-pastille is-inline"
-                        style={{ background: c.bg, borderColor: c.bord, color: c.texte }}
-                      >
-                        {c.label}
+                      <span className="couleur-badge">
+                        <span className="couleur-pastille" style={{ background: c.bord }} />
+                        <code>{c.bord}</code>
                       </span>
                     </td>
                     <td className="row-actions">
